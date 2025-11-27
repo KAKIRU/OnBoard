@@ -1,0 +1,40 @@
+package com.onboard.backend.user.controller;
+
+import com.onboard.backend.common.dto.response.CommonResponse;
+import com.onboard.backend.common.dto.response.SuccessResponseDTO;
+import com.onboard.backend.security.dto.JwtUserInfo;
+import com.onboard.backend.user.dto.request.ModifyProfileRequestDTO;
+import com.onboard.backend.user.dto.response.ModifyProfileResponseDTO;
+import com.onboard.backend.user.dto.response.RetrieveProfileResponseDTO;
+import com.onboard.backend.user.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/user")
+public class UserController {
+    private final UserService userService;
+
+    @PutMapping()
+    public CommonResponse<ModifyProfileResponseDTO> modifyProfile(
+            @AuthenticationPrincipal JwtUserInfo jwtUserInfo, @RequestPart ModifyProfileRequestDTO modifyProfileRequestDTO, @RequestPart(value = "image",required = false) MultipartFile image) throws IOException {
+        ModifyProfileResponseDTO modifyProfile = userService.modifyProfile(jwtUserInfo.getUserId(), modifyProfileRequestDTO, image);
+        return new CommonResponse<>(modifyProfile, HttpStatus.OK);
+    }
+
+    @DeleteMapping()
+    public CommonResponse<SuccessResponseDTO> deleteUser(@AuthenticationPrincipal JwtUserInfo jwtUserInfo) {
+        return new CommonResponse<>(new SuccessResponseDTO(userService.deleteUser(jwtUserInfo.getUserId())), HttpStatus.OK);
+    }
+    @GetMapping("/retrieve")
+    public CommonResponse<RetrieveProfileResponseDTO> getUserProfile(@AuthenticationPrincipal JwtUserInfo jwtUserInfo) {
+        RetrieveProfileResponseDTO profile = userService.getUserProfile(jwtUserInfo.getUserId());
+        return new CommonResponse<>(profile, HttpStatus.OK);
+    }
+}

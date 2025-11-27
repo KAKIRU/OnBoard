@@ -1,0 +1,35 @@
+package com.onboard.backend.user.entity;
+
+import com.onboard.backend.plan.entity.Plan;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@NoArgsConstructor
+@Table(name = "user_plan")
+@Data
+@Builder
+@AllArgsConstructor
+public class UserPlan {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_plan_id")
+    private Long userPlanId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+}
