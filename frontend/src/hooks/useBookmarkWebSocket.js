@@ -2,6 +2,12 @@ import { useEffect, useRef, useCallback } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+const DEFAULT_WS_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WS_URL) ||
+  (typeof window !== 'undefined'
+    ? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`
+    : undefined);
+
 /**
  * useBookmarkWebSocket
  * - SUBSCRIBE: /topic/bookmark/{planId}
@@ -12,7 +18,7 @@ import SockJS from 'sockjs-client';
  * - onMessage: (msg: any) => void  // receives parsed body
  * - headers?: object               // optional extra connect headers (e.g., auth)
  */
-export default function useBookmarkWebSocket({ planId, onMessage, headers = {}, wsUrl = 'https://i13a504.p.ssafy.io/ws' }) {
+export default function useBookmarkWebSocket({ planId, onMessage, headers = {}, wsUrl = DEFAULT_WS_URL }) {
   const clientRef = useRef(null);
   const subscriptionRef = useRef(null);
   const connectedRef = useRef(false);

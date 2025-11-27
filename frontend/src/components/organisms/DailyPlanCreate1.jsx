@@ -14,6 +14,8 @@ import { useAutoScroll } from '@/hooks/daily-plan/useAutoScroll';
 
 import './DailyPlanCreate1.css';
 
+const wsEndpoint = import.meta.env.VITE_WS_URL || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`;
+
 const DailyPlanCreate1 = ({ isOpen, onClose, bookmarkedPlaces = [], position, planId }) => {
   const modalRef = useRef(null);
   const scrollContainerRef = useRef(null);
@@ -100,7 +102,7 @@ const DailyPlanCreate1 = ({ isOpen, onClose, bookmarkedPlaces = [], position, pl
     deleteDay,
   } = useStompDaySchedule({
     planId,
-    wsUrl: 'https://i13a504.p.ssafy.io/ws',
+    wsUrl: wsEndpoint,
     accessToken,
     onMessage: (msg) => {
       try {
@@ -171,7 +173,7 @@ const DailyPlanCreate1 = ({ isOpen, onClose, bookmarkedPlaces = [], position, pl
     deletePlace,
   } = useStompDayPlace({
     planId,
-    wsUrl: 'https://i13a504.p.ssafy.io/ws',
+    wsUrl: wsEndpoint,
     accessToken,
     onMessage: async (msg) => {
       try {

@@ -175,7 +175,11 @@ const WhiteBoard = ({ planId: planIdProp, viewportSize }) => {
   // const myUserName = useMemo(() => userName , [userName]);
 
   // const WS_URL = "http://70.12.247.36:8080/ws";
-  const WS_URL = "https://i13a504.p.ssafy.io/ws";
+  const WS_URL =
+    (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WS_URL) ||
+    (typeof window !== 'undefined'
+      ? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`
+      : undefined);
 
   const myUserId = useAuthStore(s => s.userId);
   const myUserName = useAuthStore(s => s.userName);
@@ -223,7 +227,7 @@ const WhiteBoard = ({ planId: planIdProp, viewportSize }) => {
 
   const { sendMessage } = useStompWebSocket({
     planId,
-    wsUrl: 'https://i13a504.p.ssafy.io/ws',
+    wsUrl: WS_URL,
     accessToken,
 
     onMessage: (msg) => {

@@ -2,6 +2,12 @@ import { useMemo } from 'react';
 import { usePlaceBlocksStore } from '../store/mapStore';
 import { useStompPlaceBlock } from './useStompPlaceBlock';
 
+const DEFAULT_WS_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WS_URL) ||
+  (typeof window !== 'undefined'
+    ? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`
+    : undefined);
+
 /**
  * usePlaceBlockSync
  * - STOMP(WebSocket) 연결을 캡슐화하고, 수신 메시지를 Zustand 스토어에 반영합니다.
@@ -16,7 +22,7 @@ import { useStompPlaceBlock } from './useStompPlaceBlock';
  *   connectionStatus: string,
  * }}
  */
-export function usePlaceBlockSync({ planId, accessToken, wsUrl = 'https://i13a504.p.ssafy.io/ws' }) {
+export function usePlaceBlockSync({ planId, accessToken, wsUrl = DEFAULT_WS_URL }) {
   const {
     addPlaceBlock,
     removePlaceBlock,

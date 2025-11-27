@@ -9,16 +9,14 @@ export const setAccessTokenGetter = (getterFn) => {
 };
 
 const apiClient = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASE_URL,
-    baseURL: "https://i13a504.p.ssafy.io/api/v1/",
-
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   headers: { },
 });
 
 // refresh
 const refreshClient = axios.create({
-  baseURL: "https://i13a504.p.ssafy.io/api/v1/",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   withCredentials: true, // 반드시 쿠키 포함
 });

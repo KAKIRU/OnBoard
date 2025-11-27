@@ -22,6 +22,11 @@ import { usePlaceBlockSync } from '../../hooks/usePlaceBlockSync';
 import { useBoardStore } from '@/store/useBoardStore';
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const wsUrlEnv =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_WS_URL) ||
+  (typeof window !== 'undefined'
+    ? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`
+    : undefined);
 
 const fallbackCenter = { lat: 37.5665, lng: 126.9780 };
 
@@ -86,7 +91,7 @@ const PlanPage = () => {
     moveDayRealtime,
     updateSchedule,
     deleteDay,
-  } = usePlanDayScheduleWS({ planId: numericPlanId, accessToken });
+  } = usePlanDayScheduleWS({ planId: numericPlanId, accessToken, wsUrl: wsUrlEnv });
 
   // Bookmark WS 연결을 PlanPage 전용 훅으로 캡슐화
   usePlanBookmarkWS({ planId: numericPlanId, accessToken });
@@ -124,7 +129,7 @@ const PlanPage = () => {
   const { sendMessage: sendPlaceBlockMessage, connectionStatus: placeBlockConnectionStatus } = usePlaceBlockSync({
     planId: numericPlanId,
     accessToken,
-    wsUrl: 'https://i13a504.p.ssafy.io/ws',
+    wsUrl: wsUrlEnv,
   });
 
   const [isSideBarVisible, setIsSideBarVisible] = useState(true);
